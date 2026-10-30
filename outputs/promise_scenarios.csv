@@ -1,0 +1,7 @@
+scenario,cumulative,otif_rate,avg_promised_days,promise_same,promise_first,promise_second,promise_standard
+Today,False,0.40833738897676114,2.9342225331548852,0,1,2,4
+"First Class: promise 2 days, not 1",True,0.5543709697043436,3.087510646063998,0,2,2,4
+Same Day: state the 12:00 cutoff (afternoon orders = next day),True,0.579434846088332,3.113776006813481,cutoff,2,2,4
+"Standard Class: promise 5 days, not 4",True,0.6928610536561626,3.711841464898406,cutoff,2,2,5
+Second Class: promise 5 days (same transit as Standard),True,0.804599099647159,4.294850346757513,cutoff,2,5,5
+Promise the slowest observed transit for every mode,False,0.9565792675507969,5.0872520987954735,cutoff,2,6,6

@@ -1,0 +1,14 @@
+,value
+orders,65752.0
+order_lines,180519.0
+otif_today,0.40833738897676114
+on_time_rate_shipped,0.426872505842886
+cancel_rate,0.04342073244920307
+late_sales_share,0.5471398735893905
+otif_after_promise_fixes,0.804599099647159
+avg_promise_days_today,2.9342225331548852
+avg_promise_days_after_fixes,4.294850346757513
+auc_mode_lookup,0.7427450456929265
+auc_two_rules,0.77410049031166
+auc_lightgbm_all_features,0.7723993998615065
+auc_lightgbm_without_mode,0.5099921554477833

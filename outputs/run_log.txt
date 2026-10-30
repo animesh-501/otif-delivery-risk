@@ -1,0 +1,79 @@
+Data quality checks
+   {'order_lines': 180519, 'orders': 65752, 'first_order': Timestamp('2015-01-01 00:00:00'), 'last_order': Timestamp('2018-01-31 23:38:00')}
+   {'duplicate_lines': 0}
+   {'inconsistent_orders': 0}
+   {'lines_missing_keys': 0}
+   {'flag_mismatches': 4423.0, 'mismatches_on_shipped_orders': 0.0}
+   order lines: 180,519 | orders: 65,752 | 2015-01-01 to 2018-01-31
+
+OTIF by shipping mode
+  shipping_mode  promised_days  orders  share_of_orders  otif_rate  on_time_rate_shipped  cancel_rate  avg_actual_days  min_actual_days  max_actual_days   late_sales
+   First Class              1   10079            0.153      0.000                 0.000        0.047            2.000                2                2  5408068.563
+  Second Class              2   12778            0.194      0.192                 0.200        0.041            4.002                2                6  5477446.436
+Standard Class              4   39324            0.598      0.576                 0.602        0.043            3.997                2                6  8364603.380
+      Same Day              0    3571            0.054      0.493                 0.516        0.046            0.484                0                1   876276.887
+    All orders           <NA>   65752            1.000      0.408                 0.427        0.043            3.501                0                6 20126395.265
+
+Driver tests (within each shipping mode)
+             driver    within_mode  groups  late_rate_spread_pts  cramers_v  p_value  p_value_bonferroni  significant_after_correction
+     Shipping mode     all orders       4               60.1536     0.4807   0.0000              0.0000                          True
+            Market       Same Day       5                5.1670     0.0327   0.4573              1.0000                         False
+            Market   Second Class       5                1.0076     0.0089   0.9139              1.0000                         False
+            Market Standard Class       5                1.0136     0.0077   0.6940              1.0000                         False
+Destination region       Same Day      23                9.9881     0.1082   0.0112              0.3030                         False
+Destination region   Second Class      23                5.3247     0.0329   0.9262              1.0000                         False
+Destination region Standard Class      23                7.6175     0.0269   0.2012              1.0000                         False
+  Customer segment       Same Day       3                3.8430     0.0260   0.3173              1.0000                         False
+  Customer segment   Second Class       3                1.3841     0.0140   0.2992              1.0000                         False
+  Customer segment Standard Class       3                1.3923     0.0105   0.1268              1.0000                         False
+        Department       Same Day      11                3.6646     0.0757   0.0343              0.9257                         False
+        Department   Second Class      11                5.1646     0.0248   0.6738              1.0000                         False
+        Department Standard Class      11                4.6625     0.0142   0.6704              1.0000                         False
+  Product category       Same Day      47                8.7384     0.1371   0.0401              1.0000                         False
+  Product category   Second Class      50                2.0570     0.0515   0.9671              1.0000                         False
+  Product category Standard Class      50                9.9926     0.0286   0.9807              1.0000                         False
+     Order weekday       Same Day       7                6.8132     0.0432   0.3834              1.0000                         False
+     Order weekday   Second Class       7                2.3199     0.0176   0.7015              1.0000                         False
+     Order weekday Standard Class       7                1.2083     0.0081   0.8723              1.0000                         False
+       Order month       Same Day      12                6.1802     0.0379   0.9358              1.0000                         False
+       Order month   Second Class      12                2.7307     0.0195   0.9465              1.0000                         False
+       Order month Standard Class      12                2.9560     0.0164   0.5223              1.0000                         False
+ Order time of day       Same Day       4              100.0000     1.0000   0.0000              0.0000                          True
+ Order time of day   Second Class       4                0.6097     0.0070   0.8962              1.0000                         False
+ Order time of day Standard Class       4                1.1663     0.0085   0.4377              1.0000                         False
+    Units in order       Same Day       4                3.3471     0.0270   0.4777              1.0000                         False
+    Units in order   Second Class       4                1.4700     0.0119   0.6285              1.0000                         False
+    Units in order Standard Class       4                2.0737     0.0131   0.0895              1.0000                         False
+
+Can anything beat a simple lookup? (train 2015-16, test 2017+)
+                                        approach  test_auc  test_log_loss  train_orders  test_orders
+               Shipping-mode lookup (1 feature)    0.7427         0.5385         39950        22947
+Shipping mode + Same Day 12:00 cutoff (2 rules)    0.7741         0.5003         39950        22947
+           LightGBM, all 14 order-time features    0.7724         0.5140         39950        22947
+    LightGBM, same features minus shipping mode    0.5100         0.6927         39950        22947
+
+Promise scenarios
+                                                       scenario  cumulative  otif_rate  avg_promised_days promise_same  promise_first  promise_second  promise_standard
+                                                         Today       False     0.4083             2.9342            0              1               2                 4
+                            First Class: promise 2 days, not 1        True     0.5544             3.0875            0              2               2                 4
+Same Day: state the 12:00 cutoff (afternoon orders = next day)        True     0.5794             3.1138       cutoff              2               2                 4
+                         Standard Class: promise 5 days, not 4        True     0.6929             3.7118       cutoff              2               2                 5
+       Second Class: promise 5 days (same transit as Standard)        True     0.8046             4.2949       cutoff              2               5                 5
+           Promise the slowest observed transit for every mode       False     0.9566             5.0873       cutoff              2               6                 6
+
+Summary
+ orders                           65752.0000
+order_lines                     180519.0000
+otif_today                           0.4083
+on_time_rate_shipped                 0.4269
+cancel_rate                          0.0434
+late_sales_share                     0.5471
+otif_after_promise_fixes             0.8046
+avg_promise_days_today               2.9342
+avg_promise_days_after_fixes         4.2949
+auc_mode_lookup                      0.7427
+auc_two_rules                        0.7741
+auc_lightgbm_all_features            0.7724
+auc_lightgbm_without_mode            0.5100
+
+Outputs written to /home/claude/projects/otif-delivery-risk/outputs and /home/claude/projects/otif-delivery-risk/charts

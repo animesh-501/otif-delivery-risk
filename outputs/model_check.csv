@@ -1,0 +1,5 @@
+approach,test_auc,test_log_loss,train_orders,test_orders
+Shipping-mode lookup (1 feature),0.7427450456929265,0.5385429148302141,39950,22947
+Shipping mode + Same Day 12:00 cutoff (2 rules),0.77410049031166,0.5002778232549293,39950,22947
+"LightGBM, all 14 order-time features",0.7723993998615065,0.5139864555944639,39950,22947
+"LightGBM, same features minus shipping mode",0.5099921554477833,0.6926639343348021,39950,22947
