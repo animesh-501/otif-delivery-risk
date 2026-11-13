@@ -1,4 +1,4 @@
-# OTIF Root-Cause Analysis: It's the Promise, Not the Network
+# OTIF Root-Cause Analysis: Delivery Promises vs. Actual Transit
 
 **Only 41% of orders arrive on time and in full. Why?** This project tests every likely suspect behind late deliveries across 65,752 orders: region, market, product, customer, timing, order size, and shipping mode. It then works out what fixing the real cause would be worth.
 
@@ -8,7 +8,7 @@
 
 ---
 
-## Result
+## Finding
 
 **Late deliveries are almost entirely a promise-setting problem.** Transit times barely vary by anything except shipping mode, and each mode's promise is set shorter than the network actually delivers.
 
@@ -48,7 +48,7 @@ The ceiling is 96%, not 100%, because 4.3% of orders were cancelled and count as
 
 **Recommendation**
 - **Do steps 1 and 2 now.** Promising First Class at 2 days is honest, since it already takes 2 days every time. Stating the Same Day cutoff costs nothing for morning orders. Together they take OTIF from 41% to 58% with no operational change.
-- **Steps 3 and 4 are a commercial call, not an analytics one.** Longer promises can cost conversions. The alternative is fixing transit itself: Standard and Second Class both swing 2–6 days, and that variability is what makes any tight promise unreliable.
+- **Steps 3 and 4 need a commercial decision.** Longer promises can cost conversions. The alternative is fixing transit itself: Standard and Second Class both swing 2–6 days, and that variability is what makes any tight promise unreliable.
 - **Review Second Class pricing either way.** As the data stands, it's a paid upgrade with no speed difference.
 
 ---
@@ -72,7 +72,7 @@ Only shipping mode and the Same Day order time are significant. In Standard Clas
 
 A 14-feature model can't beat two rules. Once shipping mode is removed, nothing left predicts lateness. Only information available when the order is placed was used; actual transit days, delivery status and ship date are outcomes, so they were excluded.
 
-**3. Over time.** OTIF sat flat at about 40% every month for three years, so this is structural, not a bad quarter:
+**3. Over time.** OTIF sat flat at about 40% every month for three years, so the problem is structural:
 
 ![OTIF trend](charts/05_otif_trend.png)
 
@@ -93,7 +93,7 @@ A 14-feature model can't beat two rules. Once shipping mode is removed, nothing 
 
 ---
 
-## Run it
+## Reproduce
 
 ```bash
 pip install -r requirements.txt
@@ -101,7 +101,7 @@ pip install -r requirements.txt
 python run_all.py
 ```
 
-Runs in under 10 seconds and rebuilds every number and chart. The full console output is in [`outputs/run_log.txt`](outputs/run_log.txt).
+Takes under 10 seconds; every number and chart above comes from this run. The full console output is in [`outputs/run_log.txt`](outputs/run_log.txt).
 
 ```
 sql/
