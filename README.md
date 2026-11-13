@@ -2,6 +2,8 @@
 
 **Only 41% of orders arrive on time and in full. Why?** This project tests every likely suspect behind late deliveries across 65,752 orders: region, market, product, customer, timing, order size, and shipping mode. It then works out what fixing the real cause would be worth.
 
+![Project summary chart](assets/social-preview.png)
+
 `SQL (DuckDB)` `Python` `pandas` `SciPy` `scikit-learn` `LightGBM` `matplotlib`
 
 ---
