@@ -51,6 +51,28 @@ The ceiling is 96%, not 100%, because 4.3% of orders were cancelled and count as
 - **Steps 3 and 4 need a commercial decision.** Longer promises can cost conversions. The alternative is fixing transit itself: Standard and Second Class both swing 2–6 days, and that variability is what makes any tight promise unreliable.
 - **Review Second Class pricing either way.** As the data stands, it's a paid upgrade with no speed difference.
 
+### What each extra point of OTIF costs
+
+The four steps are one path. To check whether a better mix of promises exists, I scored every allowed combination and kept the ones that give the most OTIF for a given average promise ([`promise_frontier.py`](promise_frontier.py)). Two business rules apply: no promise gets shorter than today's, and a faster tier never promises longer than a slower one. That leaves 194 of 2,744 combinations.
+
+![OTIF vs days promised](charts/06_promise_frontier.png)
+
+- **The two quick wins are about 5x better value than anything else.** Stating the Same Day cutoff and promising First Class 2 days buy 17 OTIF points for 0.18 extra days of average promise, about 95 points per day.
+- **After that, every point costs the same.** Each extra point of OTIF costs about 0.05 days (roughly 1.25 hours) of average promise, or about 19 points per day, whether you lengthen Second Class or Standard. Both have the same flat 2–6 day transit, so no mix of promises does better.
+- **The four steps above are on the frontier.** No allowed combination reaches 80% OTIF with a shorter average promise than step 4 (4.3 days).
+
+Cheapest promises for each OTIF target, with both quick wins in place:
+
+| OTIF target | Second Class | Standard Class | OTIF reached | Avg. days promised | vs. today |
+|---|---|---|---|---|---|
+| 60% | 3 days | 4 days | 62% | 3.3 | +0.37 |
+| 70% | 3 days | 5 days | 73% | 3.9 | +0.97 |
+| 80% | 5 days | 5 days | 80% | 4.3 | +1.36 |
+| 90% | 5 days | 6 days | 92% | 4.9 | +1.96 |
+| 95% | 6 days | 6 days | 96% | 5.1 | +2.15 |
+
+Past 58%, OTIF can only be bought with longer promises at a fixed rate of about 1.25 hours of promise per point. Getting it cheaper means narrowing the 2–6 day transit spread, which is a carrier and network question.
+
 ---
 
 ## How I ruled out everything else
@@ -103,6 +125,14 @@ python run_all.py
 
 Takes under 10 seconds; every number and chart above comes from this run. The full console output is in [`outputs/run_log.txt`](outputs/run_log.txt).
 
+The promise cost curve runs from the committed outputs, so it works without the raw data:
+
+```bash
+python promise_frontier.py
+```
+
+Its console output, including a check that it reproduces the scenario table, is in [`outputs/promise_frontier_log.txt`](outputs/promise_frontier_log.txt).
+
 ```
 sql/
   01_quality_checks.sql    duplicates, consistency within orders, late-flag audit
@@ -113,10 +143,12 @@ src/
   drivers.py               chi-square tests per factor and mode; model vs lookup check
   promise.py               OTIF under alternative promises
   charts.py
+promise_frontier.py        every allowed promise combination scored; efficient frontier and targets
 outputs/
   summary.csv              headline numbers
   otif_by_mode.csv  otif_by_month.csv  transit_vs_promise.csv
   driver_tests.csv         every test: spread, Cramér's V, raw and corrected p-values
   model_check.csv          AUC and log loss for each approach
   promise_scenarios.csv    on_time_by_promise.csv
+  promise_frontier.csv     promise_frontier_steps.csv    promise_frontier_targets.csv
 ```

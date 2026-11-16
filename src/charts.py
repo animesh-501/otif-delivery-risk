@@ -118,3 +118,39 @@ def make_all(t, tests, sc):
     driver_strength(tests)
     scenarios(sc)
     trend(t["otif_by_month"])
+
+
+def promise_frontier(combos, front, steps, path):
+    """Every allowed promise combination, the efficient frontier, and the README's four steps."""
+    fig, ax = plt.subplots(figsize=(8.5, 4.6))
+    ax.scatter(combos.avg_promised_days, combos.otif_rate * 100, s=12, color="#d0d7de", lw=0,
+               label="Allowed promise combinations", zorder=1)
+    ax.plot(front.avg_promised_days, front.otif_rate * 100, color=ACCENT, lw=1.6, drawstyle="steps-post",
+            label="Efficient frontier", zorder=2)
+    ax.plot(path.avg_promised_days, path.otif_rate * 100, ls="none", marker="o", ms=8, mfc="white",
+            mec=INK, mew=1.6, label="Today and the four steps in the table above", zorder=3)
+    for i, (_, r) in enumerate(path.iterrows()):
+        txt = "Today" if i == 0 else f"{i}"
+        ax.annotate(txt, (r.avg_promised_days, r.otif_rate * 100),
+                    xytext=(8, -4) if i == 0 else (-12, 4) if i == 1 else (8, -12) if i == 2 else (-14, 6),
+                    textcoords="offset points", fontsize=9, color=INK, fontweight="bold")
+    quick = steps[steps.otif_pts_per_extra_day > 50]
+    rest = steps[steps.otif_pts_per_extra_day <= 50]
+    q_rate = (quick.otif_rate.iloc[-1] - steps.otif_rate.iloc[0]) * 100 / (
+        quick.avg_promised_days.iloc[-1] - steps.avg_promised_days.iloc[0])
+    r_rate = (rest.otif_rate.iloc[-1] - quick.otif_rate.iloc[-1]) * 100 / (
+        rest.avg_promised_days.iloc[-1] - quick.avg_promised_days.iloc[-1])
+    ax.text(3.17, 47, f"Quick wins: ~{q_rate:.0f} OTIF points\nper extra day of avg. promise",
+            fontsize=9, color=INK)
+    ax.text(4.0, 62, f"Everything after: ~{r_rate:.0f} points per day,\nwhichever mode you lengthen",
+            fontsize=9, color=INK)
+    ax.set_xlim(2.8, 5.25)
+    ax.set_ylim(35, 100)
+    ax.set_xlabel("Average days promised, all orders")
+    ax.set_ylabel("OTIF")
+    ax.yaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
+    ax.set_title("How much OTIF each extra day of promise buys")
+    ax.legend(loc="lower right", fontsize=8.5)
+    ax.text(0, -0.17, "Transit held as observed. Promises never shorter than today; a faster tier never "
+            "promises longer than a slower one.", transform=ax.transAxes, color=MUTED, fontsize=9)
+    _save(fig, "06_promise_frontier.png")

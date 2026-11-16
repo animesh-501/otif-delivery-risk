@@ -1,0 +1,56 @@
+Today: OTIF 0.4083, avg promise 2.9342 days
+Combinations allowed by the business rules: 194 of 2,744
+
+Efficient frontier (no other combination gives more OTIF for the same or fewer days)
+ promise_same  promise_first  promise_second  promise_standard  otif_rate  avg_promised_days
+           0              1               2                 4     0.4083             2.9342
+      cutoff              1               2                 4     0.4334             2.9605
+           0              2               2                 4     0.5544             3.0875
+      cutoff              2               2                 4     0.5794             3.1138
+           0              2               3                 4     0.5912             3.2818
+      cutoff              2               3                 4     0.6163             3.3081
+           0              2               4                 4     0.6288             3.4762
+      cutoff              2               4                 4     0.6539             3.5025
+           0              2               2                 5     0.6678             3.6856
+      cutoff              2               2                 5     0.6929             3.7118
+           0              2               3                 5     0.7046             3.8799
+      cutoff              2               3                 5     0.7297             3.9062
+           0              2               4                 5     0.7422             4.0742
+      cutoff              2               4                 5     0.7673             4.1005
+           0              2               5                 5     0.7795             4.2686
+           0              2               2                 6     0.7824             4.2836
+      cutoff              2               5                 5     0.8046             4.2949
+      cutoff              2               2                 6     0.8075             4.3099
+           0              2               3                 6     0.8193             4.4780
+      cutoff              2               3                 6     0.8443             4.5042
+           0              2               4                 6     0.8569             4.6723
+      cutoff              2               4                 6     0.8819             4.6986
+           0              2               5                 6     0.8942             4.8667
+      cutoff              2               5                 6     0.9192             4.8929
+           0              2               6                 6     0.9315             5.0610
+      cutoff              2               6                 6     0.9566             5.0873
+
+Corner points: OTIF bought per extra day of average promise
+ promise_same  promise_first  promise_second  promise_standard  otif_rate  avg_promised_days  otif_pts_per_extra_day
+           0              1               2                 4     0.4083             2.9342                     NaN
+      cutoff              1               2                 4     0.4334             2.9605                 95.4074
+      cutoff              2               2                 4     0.5794             3.1138                 95.2674
+      cutoff              2               4                 4     0.6539             3.5025                 19.1540
+      cutoff              2               6                 6     0.9566             5.0873                 19.1000
+
+Cheapest promises for each OTIF target, after the two quick wins
+  otif_target promise_same  promise_first  promise_second  promise_standard  otif_rate  avg_promised_days  extra_days_vs_today
+        0.60       cutoff              2               3                 4     0.6163             3.3081               0.3739
+        0.70       cutoff              2               3                 5     0.7297             3.9062               0.9720
+        0.80       cutoff              2               5                 5     0.8046             4.2949               1.3606
+        0.90       cutoff              2               5                 6     0.9192             4.8929               1.9587
+        0.95       cutoff              2               6                 6     0.9566             5.0873               2.1530
+
+README steps checked against this model
+   Today                                                   OTIF 0.4083 vs 0.4083 | avg days 2.9342 vs 2.9342 | on frontier: True
+   First Class: promise 2 days, not 1                      OTIF 0.5544 vs 0.5544 | avg days 3.0875 vs 3.0875 | on frontier: True
+   Same Day: state the 12:00 cutoff (afternoon orders = ne OTIF 0.5794 vs 0.5794 | avg days 3.1138 vs 3.1138 | on frontier: True
+   Standard Class: promise 5 days, not 4                   OTIF 0.6929 vs 0.6929 | avg days 3.7118 vs 3.7118 | on frontier: True
+   Second Class: promise 5 days (same transit as Standard) OTIF 0.8046 vs 0.8046 | avg days 4.2949 vs 4.2949 | on frontier: True
+
+Outputs written to outputs and charts
